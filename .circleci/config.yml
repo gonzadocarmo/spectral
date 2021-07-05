@@ -55,8 +55,7 @@ commands:
     steps:
       - run:
           name: Lint commit messages
-          command: |
-            echo "$(git log -1 --pretty=format:"%s")" | npx commitlint
+          command: node ./scripts/lint-commit-messages.mjs
 
   test-node:
     steps:
@@ -85,7 +84,7 @@ commands:
 jobs:
   lint:
     docker:
-      - image: circleci/node:14
+      - image: circleci/node:16
     steps:
       - checkout
       - cached-dependencies
@@ -296,4 +295,3 @@ workflows:
             - test-node
             - test-windows
             - test-browser
-  

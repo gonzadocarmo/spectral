@@ -23,7 +23,7 @@
     "node": ">=12"
   },
   "scripts": {
-    "clean": "rimraf packages/*/{dist,.cache}",
+    "clean": "rimraf .cache packages/*/{dist,.cache}",
     "prebuild": "yarn workspace @stoplight/spectral-ruleset-migrator prebuild",
     "build": "tsc --build ./tsconfig.build.json",
     "postbuild": "yarn workspace @stoplight/spectral-cli postbuild && yarn workspace @stoplight/spectral-core postbuild",
@@ -49,6 +49,7 @@
     "@brightcove/kacl": "^0.1.11",
     "@commitlint/cli": "^12.1.4",
     "@commitlint/config-conventional": "^12.1.4",
+    "@octokit/core": "^3.5.1",
     "@types/jest": "^26.0.23",
     "@types/jest-when": "^2.7.3",
     "@types/karma": "^6.3.0",
