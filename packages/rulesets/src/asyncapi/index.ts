@@ -44,7 +44,7 @@ export default {
       description: 'Channel path must not end with slash.',
       recommended: true,
       type: 'style',
-      given: '$.channels.*~',
+      given: '$.channels~',
       then: {
         function: pattern,
         functionOptions: {

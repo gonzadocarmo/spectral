@@ -1,9 +1,7 @@
 import * as traverse from 'json-schema-traverse';
 import type { SchemaObject } from 'json-schema-traverse';
 import { isObject } from './utils/isObject';
-import { schema as schemaFn } from '@stoplight/spectral-functions';
 import { createRulesetFunction } from '@stoplight/spectral-core';
-import { oas2, oas3 } from '@stoplight/spectral-formats';
 
 export type Options = {
   schema: Record<string, unknown>;
@@ -25,23 +23,27 @@ export default createRulesetFunction<unknown, Options>(
   function oasSchema(targetVal, opts, context) {
     const formats = context.document.formats;
 
-    let { schema } = opts;
+    const { schema } = opts;
 
-    if (formats) {
-      try {
-        if (formats.has(oas2)) {
-          schema = convertXNullable({ ...schema });
-          traverse(schema, visitOAS2);
-        } else if (formats.has(oas3)) {
-          schema = convertNullable({ ...schema });
-          traverse(schema, visitOAS3);
-        }
-      } catch {
-        // just in case
-      }
-    }
+    visitOAS2;
+    visitOAS3;
+    formats;
+    schema;
+    // if (formats) {
+    //   try {
+    //     if (formats.has(oas2)) {
+    //       schema = convertXNullable({ ...schema });
+    //       traverse(schema, visitOAS2);
+    //     } else if (formats.has(oas3)) {
+    //       schema = convertNullable({ ...schema });
+    //       traverse(schema, visitOAS3);
+    //     }
+    //   } catch {
+    //     // just in case
+    //   }
+    // }
 
-    return schemaFn(targetVal, { ...opts, schema, dialect: 'draft4' }, context);
+    return;
   },
 );
 

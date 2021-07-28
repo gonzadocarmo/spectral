@@ -1,0 +1,38 @@
+JSONPath = Root
+  nodes:(deep:Descendant? step:(Node) { return { ...step, deep: deep !== null && deep[1] !== null } })*
+  modifiers:(Modifier)?
+  { return [...nodes].concat(Array.isArray(modifiers) ? modifiers : modifiers === null ? [] : modifiers) }
+
+Root = "$"
+
+Node =  value:((value:Identifier) / "[" value:(MemberIdentifier) "]" { return value }) { return { type: "MemberExpression", value } }
+        / (Wildcard / "[" Wildcard "]") { return { type: "WildcardExpression" } }
+//      / "[" expression:(ScriptExpression / ScriptFilterExpression) "]" { return expression }
+        / "[" expression:(ScriptFilterExpression) "]" { return expression }
+        / "[" value:(value:MemberIdentifier ","? { return value })* "]" { return { type: "MultipleMemberExpression", value: [...new Set(value)] } }
+        / "[" expression:SliceExpression "]" { return expression }
+
+ScriptExpression = "(" value:JSScript ")" { return { type: "ScriptExpression", value } }
+ScriptFilterExpression = "?(" value:JSScript ")" { return { type: "ScriptFilterExpression", value } }
+SliceExpression = value:$(((Number ":" Number) / (":" Number) / Number) (":" Number)?) { return { type: "SliceExpression", value: value.split(":") } }
+
+KeyExpression = "~" { return { type: "KeyExpression" } }
+ParentExpression = "^" { return { type: "ParentExpression" } }
+Modifier = KeyExpression / ParentExpression+ / ParentExpression+ KeyExpression
+
+Descendant = [.][.]?
+
+Identifier = $(Char (Char / Digit / [-])*)
+MemberIdentifier = Number / Identifier / (("\"" $([^"]*) "\"") / ("'" $([^']*) "'")) { return text().slice(1, -1) }
+Number = "-"? Digit+ { return Number(text()); }
+
+Quote = "'" / "\""
+Wildcard = "*"
+Char = [A-Za-z]
+Digit = [0-9]
+
+JSScript = $(Char / Digit / JSToken / JSString / JSScriptElementAccess / JSFnCall)+
+JSScriptElementAccess = ("[" (Digit / Char / JSString / JSFnCall)* "]")
+JSString = (["] [^"]* ["]) / (['] [^']* ['])
+JSToken = [ $@._=<>!|&+]
+JSFnCall = ("(" (JSString / Char / Digit / JSScriptElementAccess / JSFnCall)* ")")

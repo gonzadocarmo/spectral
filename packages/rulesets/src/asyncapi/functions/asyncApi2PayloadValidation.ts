@@ -3,6 +3,7 @@ import addFormats from 'ajv-formats';
 import { createRulesetFunction } from '@stoplight/spectral-core';
 import * as betterAjvErrors from '@stoplight/better-ajv-errors';
 import * as asyncApi2Schema from '../schemas/schema.asyncapi2.json';
+import { ValidateFunction } from 'ajv/lib/types/index';
 
 const fakeSchemaObjectId = 'asyncapi2#/definitions/schema';
 const asyncApi2SchemaObject = { $ref: fakeSchemaObjectId };
@@ -16,7 +17,7 @@ addFormats(ajv);
 
 ajv.addSchema(asyncApi2Schema, asyncApi2Schema.$id);
 
-const ajvValidationFn = ajv.compile(asyncApi2SchemaObject);
+let ajvValidationFn: ValidateFunction;
 
 export default createRulesetFunction<unknown, null>(
   {
@@ -24,6 +25,8 @@ export default createRulesetFunction<unknown, null>(
     options: null,
   },
   function asyncApi2PayloadValidation(targetVal, _opts, context) {
+    ajvValidationFn ??= ajv.compile(asyncApi2SchemaObject);
+
     ajvValidationFn(targetVal);
 
     return betterAjvErrors(asyncApi2SchemaObject, ajvValidationFn.errors, {

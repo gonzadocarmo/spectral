@@ -1,7 +1,23 @@
-import { schema } from '@stoplight/spectral-functions';
 import { oas2, oas3 } from '@stoplight/spectral-formats';
 import type { IFunction } from '@stoplight/spectral-core';
 import { isObject } from './utils/isObject';
+
+function getType(input: unknown) {
+  switch (typeof input) {
+    case 'string':
+    case 'boolean':
+    case 'number':
+      return typeof input;
+    case 'object':
+      if (input === null) {
+        return 'null';
+      }
+
+      return Array.isArray(input) ? 'array' : 'object';
+    default:
+      throw TypeError('Unknown input type');
+  }
+}
 
 export const typedEnum: IFunction = function (targetVal, opts, context) {
   if (!isObject(targetVal)) {
@@ -11,43 +27,30 @@ export const typedEnum: IFunction = function (targetVal, opts, context) {
   if (targetVal.enum === null || targetVal.enum === void 0 || targetVal.type === null || targetVal.type === void 0) {
     return;
   }
+
+  if (!Array.isArray(targetVal.enum) || targetVal.enum.length === 0) {
+    return;
+  }
+
   // do not use rest spread operator here, as this causes the whole tslib gets injected despite proper target set...
   // obviously, having tslib inlined makes the code size quite larger (around 4x after compression - 1.8K vs 7.4K).
   const { enum: enumValues } = targetVal;
   const initialSchema = Object.assign({}, targetVal);
   delete initialSchema.enum;
 
-  if (!Array.isArray(enumValues)) {
-    return;
-  }
-
   const { document } = context;
-  const isOAS3 = document.formats?.has(oas3) === true;
-  const isOAS2 = document.formats?.has(oas2) === true;
 
-  let innerSchema;
-  if ((isOAS3 && targetVal.nullable === true) || (isOAS2 && targetVal['x-nullable'] === true)) {
-    const type = Array.isArray(initialSchema.type)
-      ? [...(initialSchema.type as unknown[])]
-      : initialSchema.type !== void 0
-      ? [initialSchema.type]
-      : [];
-    if (!type.includes('null')) {
-      type.push('null');
-    }
+  let type: string | string[] | void;
+  if (
+    (document.formats?.has(oas3) === true && targetVal.nullable === true) ||
+    (document.formats?.has(oas2) === true && targetVal['x-nullable'] === true)
+  ) {
+    type = Array.isArray(initialSchema.type) || initialSchema.type !== void 0 ? targetVal.type : void 0;
 
-    innerSchema = { type, enum: initialSchema.enum };
-  } else {
-    innerSchema = { type: initialSchema.type, enum: initialSchema.enum };
+    (Array.isArray(type) ? type : (type = [type])).push('null');
   }
-
-  const schemaObject = { schema: innerSchema };
-
-  const incorrectValues: Array<{ index: number; val: unknown }> = [];
 
   (enumValues as unknown[]).forEach((val, index) => {
-    const res = schema(val, schemaObject, context);
-
     if (Array.isArray(res) && res.length !== 0) {
       incorrectValues.push({ index, val });
     }

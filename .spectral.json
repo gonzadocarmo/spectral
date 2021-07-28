@@ -1,0 +1,8 @@
+{
+  "extends": "spectral:oas",
+  "rules": {
+    "oas3-examples-value-or-externalValue": "off",
+    "oas3-valid-media-example": "off",
+    "oas3-schema": "off"
+  }
+}

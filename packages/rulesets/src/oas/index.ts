@@ -35,8 +35,7 @@ const ruleset = {
       description: 'Operation must have at least one "2xx" or "3xx" response.',
       recommended: true,
       type: 'style',
-      given:
-        "$.paths[*][?( @property === 'get' || @property === 'put' || @property === 'post' || @property === 'delete' || @property === 'options' || @property === 'head' || @property === 'patch' || @property === 'trace' )]",
+      given: '$.paths[*][get,put,post,delete,options,head,patch,trace]',
       then: {
         field: 'responses',
         function: oasOpSuccessResponse,
@@ -48,8 +47,7 @@ const ruleset = {
       recommended: true,
       formats: [oas2],
       type: 'validation',
-      given:
-        "$.paths[*][?( @property === 'get' || @property === 'put' || @property === 'post' || @property === 'delete' || @property === 'options' || @property === 'head' || @property === 'patch' || @property === 'trace' )]",
+      given: '$.paths[*][get,put,post,delete,options,head,patch,trace]',
       then: {
         function: oasOpFormDataConsumeCheck,
       },
@@ -69,8 +67,7 @@ const ruleset = {
       message: '{{error}}',
       recommended: true,
       type: 'validation',
-      given:
-        "$.paths[*][?( @property === 'get' || @property === 'put' || @property === 'post' || @property === 'delete' || @property === 'options' || @property === 'head' || @property === 'patch' || @property === 'trace' )].parameters",
+      given: '$.paths[*][get,put,post,delete,options,head,patch,trace].parameters',
       then: {
         function: oasOpParams,
       },
@@ -239,8 +236,7 @@ const ruleset = {
       description: 'Operation "description" must be present and non-empty string.',
       recommended: true,
       type: 'style',
-      given:
-        "$.paths[*][?( @property === 'get' || @property === 'put' || @property === 'post' || @property === 'delete' || @property === 'options' || @property === 'head' || @property === 'patch' || @property === 'trace' )]",
+      given: '$.paths[*][get,put,post,delete,options,head,patch,trace]',
       then: {
         field: 'description',
         function: truthy,
@@ -250,8 +246,7 @@ const ruleset = {
       description: 'Operation must have "operationId".',
       recommended: true,
       type: 'style',
-      given:
-        "$.paths[*][?( @property === 'get' || @property === 'put' || @property === 'post' || @property === 'delete' || @property === 'options' || @property === 'head' || @property === 'patch' || @property === 'trace' )]",
+      given: '$.paths[*][get,put,post,delete,options,head,patch,trace]',
       then: {
         field: 'operationId',
         function: truthy,
@@ -261,8 +256,7 @@ const ruleset = {
       message: 'operationId must not characters that are invalid when used in URL.',
       recommended: true,
       type: 'validation',
-      given:
-        "$.paths[*][?( @property === 'get' || @property === 'put' || @property === 'post' || @property === 'delete' || @property === 'options' || @property === 'head' || @property === 'patch' || @property === 'trace' )]",
+      given: '$.paths[*][get,put,post,delete,options,head,patch,trace]',
       then: {
         field: 'operationId',
         function: pattern,
@@ -275,8 +269,7 @@ const ruleset = {
       description: 'Operation must not have more than a single tag.',
       recommended: false,
       type: 'style',
-      given:
-        "$.paths[*][?( @property === 'get' || @property === 'put' || @property === 'post' || @property === 'delete' || @property === 'options' || @property === 'head' || @property === 'patch' || @property === 'trace' )]",
+      given: '$.paths[*][get,put,post,delete,options,head,patch,trace]',
       then: {
         field: 'tags',
         function: length,
@@ -289,8 +282,7 @@ const ruleset = {
       description: 'Operation must have non-empty "tags" array.',
       recommended: true,
       type: 'style',
-      given:
-        "$.paths[*][?( @property === 'get' || @property === 'put' || @property === 'post' || @property === 'delete' || @property === 'options' || @property === 'head' || @property === 'patch' || @property === 'trace' )]",
+      given: '$.paths[*][get,put,post,delete,options,head,patch,trace]',
       then: {
         field: 'tags',
         function: truthy,
@@ -353,7 +345,7 @@ const ruleset = {
       severity: 0,
       recommended: true,
       resolved: false,
-      given: "$..[?(@property === '$ref')]",
+      given: '$..["$ref"]',
       then: {
         function: refSiblings,
       },

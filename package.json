@@ -93,8 +93,8 @@
     "karma-typescript": "^5.5.1",
     "karma-typescript-es6-transform": "^5.2.0",
     "lint-staged": "^11.0.0",
-    "nanoid": "^3.1.23",
     "memfs": "^3.2.2",
+    "nanoid": "^3.1.23",
     "prettier": "^2.3.2",
     "semantic-release": "^17.4.4",
     "semantic-release-monorepo": "^7.0.5",
@@ -120,5 +120,7 @@
       "prettier --ignore-path .eslintignore --write"
     ]
   },
-  "version": "6.0.0-alpha2"
+  "dependencies": {
+    "nimma": "file:.yalc/nimma"
+  }
 }

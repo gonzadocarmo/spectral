@@ -91,3 +91,9 @@ migrateRuleset(path.join(__dirname, "spectral.json"), {
   format: "commonjs", // esm available too, but not recommended for now
 }).then(fs.promises.writeFile.bind(fs.promises, path.join(__dirname, ".spectral.js")));
 ```
+
+### Caveats
+
+YAML/JSON extending JS rulesets
+
+It's not disallowed to

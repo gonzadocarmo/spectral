@@ -1,0 +1,49 @@
+{
+  "name": "nimma",
+  "version": "0.0.0",
+  "description": "JSONPath-based object querying that scales.",
+  "keywords": [
+    "json",
+    "jsonpath"
+  ],
+  "homepage": "https://github.com/P0lip/nimma",
+  "bugs": {
+    "url": "https://github.com/P0lip/nimma/issues"
+  },
+  "engines": {
+    "node": ">=12"
+  },
+  "files": [
+    "dist/**",
+    "src/**"
+  ],
+  "type": "module",
+  "typings": "./src/index.d.ts",
+  "main": "./dist/cjs/index.cjs",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.mjs",
+      "require": "./dist/cjs/index.cjs"
+    },
+    "./runtime": {
+      "import": "./dist/esm/runtime/index.mjs",
+      "require": "./dist/cjs/runtime/index.cjs"
+    }
+  },
+  "license": "Apache-2.0",
+  "author": "P0lip",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/P0lip/nimma"
+  },
+  "scripts": {
+    "prebuild": "pegjs --optimize speed -o src/parser/parser.cjs src/parser/parser.peg",
+    "build": "NODE_ENV=production rollup -c",
+    "lint": "ls-lint && eslint --cache --cache-location .cache/ src/**/*.mjs",
+    "test": "NODE_ENV=test c8 mocha --experimental-modules --config .mocharc ./**/__tests__/**/*.test.mjs"
+  },
+  "dependencies": {
+    "astring": "^1.7.5"
+  },
+  "yalcSig": "18f9275a25aba973a049a9636d24e6d5"
+}
